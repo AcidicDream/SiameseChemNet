@@ -32,11 +32,6 @@ import os
 
 
 
-def Eval(net, data):
-    img0, img1, label1 = data
-    output1, output2 = net(Variable(img0).cuda(), Variable(img1).cuda())
-    prediction = F.pairwise_distance(output1, output2).cpu().data.numpy()[0][0]
-    return label1, prediction
 
 
 def get_accuracy(net , test_dataloader, threshHold):
@@ -45,12 +40,11 @@ def get_accuracy(net , test_dataloader, threshHold):
     incorrect = 0
     for i in range(100):
         data = next(dataiter)
-        label, prediction = Eval(net,data)
+        label, prediction = net.Eval(net,data)
         if (label > 0.5).numpy() & (prediction < threshHold):
             correct = correct+1
         elif (label < 0.5).numpy() & (prediction > threshHold):
             correct = correct + 1
         else:
             incorrect = incorrect + 1
-
     return correct/(correct+incorrect)
