@@ -9,7 +9,7 @@ from torchvision.datasets import MNIST
 import os
 import pandas as pd
 import torchvision.datasets as dset
-
+import torch.nn.functional as F
 from dataReader.DataReader import load_checkpoint, save_checkpoint
 from dataReader.Relabeler import train_test_split, DATA_DIR
 from dataReader.dataset import get_siam_set
@@ -73,3 +73,9 @@ class siamAutoencoder(nn.Module):
         loss_contrastive.backward()
         optimizer.step()
         return loss_contrastive.data[0]
+
+    def Eval(net, data):
+        img0, img1, label1 = data
+        output1, output2 = net(Variable(img0).cuda(), Variable(img1).cuda())
+        prediction = F.pairwise_distance(output1, output2).cpu().data.numpy()[0][0]
+        return label1, prediction

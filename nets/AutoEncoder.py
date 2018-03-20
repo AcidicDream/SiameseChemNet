@@ -14,7 +14,7 @@ from dataReader.DataReader import load_checkpoint, save_checkpoint
 from dataReader.Relabeler import train_test_split, DATA_DIR
 from dataReader.dataset import get_siam_set
 from util.config import train_batch_size
-
+import torch.nn.functional as F
 from utils.Visualize import to_img
 
 
@@ -60,3 +60,8 @@ class autoencoder(nn.Module):
         loss.backward()
         optimizer.step()
         return loss
+
+    def Eval(net, data):
+        img0, img1, label1 = data
+        output1=  Variable(img1).cuda()
+        return label1, output1
