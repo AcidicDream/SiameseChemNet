@@ -28,3 +28,12 @@ def to_img(x):
     x = x.clamp(0, 1)
     x = x.view(x.size(0), 1, 28, 28)
     return x
+
+
+def plot_data(pred_all, y_all):
+    c = ['#ff0000', '#009999']
+    for i in range(2):
+        f = pred_all[np.where(y_all == i)]
+        plt.plot(f[:, 0], f[:, 1], '.', c=c[i])
+    plt.legend(['0', '1'])
+    plt.savefig('result.png')
