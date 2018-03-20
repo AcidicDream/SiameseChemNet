@@ -63,5 +63,5 @@ class autoencoder(nn.Module):
 
     def Eval(net, data):
         img0, img1, label1 = data
-        output1=  Variable(img1).cuda()
+        output1=  net(Variable(img1).cuda())
         return label1, output1
