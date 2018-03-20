@@ -7,6 +7,15 @@ def diff(img, img1):  # returns just the difference of the two images
     return cv2.absdiff(img, img1)
 
 
+def preProcess(img0,img1):
+    diff = ImageChops.subtract(img0, img1)
+    diff = diff.point(lambda i: i * 5)
+    w, h = diff.size
+    area = (9, 70, 115, 229)
+    diff = diff.crop(area)
+    return diff
+
+
 img1 = Image.open('/home/jasper/Documents/BP_Jasp/data/pg/all/T0412_S008_U014/444-1.jpg' )
 img2 = Image.open('/home/jasper/Documents/BP_Jasp/data/pg/all/T0412_S008_U014/444-2300.jpg' )
 
