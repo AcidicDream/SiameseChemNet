@@ -30,10 +30,10 @@ def to_img(x):
     return x
 
 
-def plot_data(pred_all, y_all):
+def plot_data(pred_all, y_all,epoch):
     c = ['#ff0000', '#009999']
     for i in range(2):
         f = pred_all[np.where(y_all == i)]
         plt.plot(f[:, 0], f[:, 1], '.', c=c[i])
     plt.legend(['0', '1'])
-    plt.savefig('result.png')
+    plt.savefig(str(epoch)+'-result.png')
