@@ -16,9 +16,7 @@ import torch.nn as nn
 from torch import optim
 import torch.nn.functional as F
 
-from dataReader.Relabeler import train_test_split
-from util.config import IMAGE_DIR, GrayScale, DATA_DIR
-
+from Config import IMAGE_DIR, GrayScale
 from utils.preProcess import preProcess
 
 

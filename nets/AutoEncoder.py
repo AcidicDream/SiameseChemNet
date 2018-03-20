@@ -1,22 +1,6 @@
 import torch
-import torchvision
 from torch import nn
 from torch.autograd import Variable
-from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision.utils import save_image
-from torchvision.datasets import MNIST
-import os
-import pandas as pd
-import torchvision.datasets as dset
-
-from dataReader.DataReader import load_checkpoint, save_checkpoint
-from dataReader.Relabeler import train_test_split, DATA_DIR
-from dataReader.dataset import get_siam_set
-from util.config import train_batch_size
-import torch.nn.functional as F
-from utils.Visualize import to_img
-
 
 class autoencoder(nn.Module):
     def __init__(self):
@@ -59,7 +43,7 @@ class autoencoder(nn.Module):
         optimizer.zero_grad()
         loss.backward()
         optimizer.step()
-        return loss
+        return loss.data[0]
 
     def Eval(net, data):
         img0, img1, label1 = data

@@ -14,8 +14,6 @@ from keras.utils import np_utils
 from matplotlib.widgets import Button, RadioButtons
 from scipy.misc import imresize
 
-from DataReader import get_triples
-from util.colorConstancy import max_white, retinex_adjust, retinex_with_adjust
 #from util.config import IMAGE_DIR
 stable= False
 DATA_DIR = '/home/jasper/Documents/BP_Jasp/data/pg/valSet/splitting/'

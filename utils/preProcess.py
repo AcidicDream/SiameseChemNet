@@ -16,14 +16,14 @@ def preProcess(img0,img1):
     return diff
 
 
-img1 = Image.open('/home/jasper/Documents/BP_Jasp/data/pg/all/T0412_S008_U014/444-1.jpg' )
-img2 = Image.open('/home/jasper/Documents/BP_Jasp/data/pg/all/T0412_S008_U014/444-2300.jpg' )
+#img1 = Image.open('/home/jasper/Documents/BP_Jasp/data/pg/all/T0412_S008_U014/444-1.jpg' )
+#img2 = Image.open('/home/jasper/Documents/BP_Jasp/data/pg/all/T0412_S008_U014/444-2300.jpg' )
 
 
-img1=img1.convert('LA')
-img2=img2.convert('LA')
-diff = ImageChops.subtract(img1, img2)
-diff = diff.point(lambda i: i * 5)
-w ,h = diff.size
-area = (9,70,115,229)
-diff.crop(area).show()
+#img1=img1.convert('LA')
+#img2=img2.convert('LA')
+#diff = ImageChops.subtract(img1, img2)
+#diff = diff.point(lambda i: i * 5)
+#w ,h = diff.size
+#area = (9,70,115,229)
+#diff.crop(area).show()

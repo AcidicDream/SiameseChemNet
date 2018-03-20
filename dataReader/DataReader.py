@@ -1,4 +1,6 @@
 from __future__ import division, print_function
+
+import csv
 import itertools
 import numpy as np
 import os
@@ -10,7 +12,7 @@ from keras.preprocessing.image import ImageDataGenerator
 from keras.utils import np_utils
 from scipy.misc import imresize
 
-from util.config import model_dir
+from Config import model_dir
 
 epoch = 0
 
@@ -63,11 +65,11 @@ def save_checkpoint(net, epoch,optimizer):
         'epoch': epoch + 1,
         'state_dict': net.state_dict(),
         'optimizer': optimizer.state_dict(),
-    },model_dir  + '2.pth.tar')
+    },model_dir  + '.pth.tar')
 
 
 def load_checkpoint(model,optimize = None ):
-    checkpoint = torch.load(model_dir  + '2.pth.tar')
+    checkpoint = torch.load(model_dir  + '.pth.tar')
     model_state = model.state_dict()
     new_params = model.state_dict()
     new_params.update(checkpoint)

@@ -1,12 +1,12 @@
 from tensorboardX import SummaryWriter
 from torchvision import models
 
-from util.config import LOG_DIR
+from Config import LOG_DIR
 
 
 class Logger:
 
-    writer = SummaryWriter("/logs/")
+    writer = SummaryWriter()
     correct = 0
     incorrect = 0
     def writeTB(self , name, val , iter):
@@ -39,7 +39,7 @@ class Logger:
 
     def AddGraph(self,net,dummy_input):
         with SummaryWriter(comment="autoEncoder 1.0 ") as w:
-            w.add_graph(net, (dummy_input,dummy_input,))
+            w.add_graph(net, dummy_input)
 
 
     def close(self):

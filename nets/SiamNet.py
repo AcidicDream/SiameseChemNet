@@ -1,20 +1,10 @@
 import torch
-import torchvision
+import numpy as np
 from torch import nn
 from torch.autograd import Variable
-from torch.utils.data import DataLoader
-from torchvision import transforms
-from torchvision.utils import save_image
-from torchvision.datasets import MNIST
-import os
-import pandas as pd
-import torchvision.datasets as dset
 import torch.nn.functional as F
-from dataReader.DataReader import load_checkpoint, save_checkpoint
-from dataReader.Relabeler import train_test_split, DATA_DIR
-from dataReader.dataset import get_siam_set
-from util.config import train_batch_size
 
+from dataReader.DataReader import load_checkpoint
 from utils.Visualize import to_img, diff
 
 
@@ -30,7 +20,7 @@ class siamAutoencoder(nn.Module):
             nn.ReLU(True),
             nn.MaxPool2d(2, stride=1)  # b, 8, 2, 2
         )
-        # self.encoder = load_checkpoint(self.encoder)
+        self.encoder = load_checkpoint(self.encoder)
 
         self.fc1 = nn.Sequential(
             nn.Linear(8 * 2 * 2, 16),
@@ -74,8 +64,8 @@ class siamAutoencoder(nn.Module):
         optimizer.step()
         return loss_contrastive.data[0]
 
-    def Eval(net, data):
+    def Eval(self, data):
         img0, img1, label1 = data
-        output1, output2 = net(Variable(img0).cuda(), Variable(img1).cuda())
+        output1, output2 = self(Variable(img0).cuda(), Variable(img1).cuda())
         prediction = F.pairwise_distance(output1, output2).cpu().data.numpy()[0][0]
         return label1, prediction

@@ -7,17 +7,8 @@ import matplotlib.pyplot as plt
 import torchvision.utils
 from torchvision.models import vgg16_bn
 
+from Config import train_batch_size, train_number_epochs
 from Eval import get_accuracy
-from Train import trainBatch
-from dataReader.DataReader import get_triples, save_checkpoint, load_checkpoint, epoch
-from dataReader.Relabeler import write_list, train_test_split, update_list
-from logger import Logger
-from nets.SiamNetwork import ContrastiveLoss, SiameseNetwork, SiameseNetworkRGB, SiameseNetwork2
-from dataReader.dataset import SiameseNetworkDataset, get_siam_set
-from nets.autoEncoder import siamAutoencoder
-from nets.resnet import ResNet18, ResNetSiam
-from util.config import DATA_DIR, IMAGE_DIR, train_batch_size, NUMBER_OF_EPOCH
-from util.plot_image import show_plot, imshow
 import numpy as np
 import random
 from PIL import Image
@@ -30,7 +21,18 @@ from torch import optim
 import torch.nn.functional as F
 import os
 
+from nets.AutoEncoder import autoencoder
+from nets.SiamNet import siamAutoencoder
 
+from utils.Logger import Logger
+
+from dataReader.DataReader import load_checkpoint, train_test_split, save_checkpoint
+
+from utils.LossFunctions import ContrastiveLoss
+
+from dataReader.Dataset import get_siam_set
+
+from utils.Visualize import show_plot
 
 currentEpoch=0
 
@@ -42,15 +44,21 @@ log = Logger()
 
 
 #define network to use
-net = siamAutoencoder()
+net = siamAutoencoder().cuda()
 optimizer = optim.Adam(net.parameters(),lr = 0.0005 )
-net = load_checkpoint(net,optimizer)
+#net = load_checkpoint(net,optimizer)
+criterion = ContrastiveLoss()
+
+
+#net = autoencoder().cuda()
+#criterion = nn.MSELoss()
+#optimizer = torch.optim.Adam(net.parameters(), lr=0.0005,weight_decay=1e-5)
 
 
 #todo modify logger
-dummy_input = Variable(torch.rand(1, 1, 28, 28))
-log.AddGraph(net,dummy_input.cuda())
-criterion = ContrastiveLoss()
+dummy_input = Variable(torch.rand(1, 1, 28, 28)).cuda()
+log.AddGraph(net,(dummy_input,dummy_input))
+
 
 
 
@@ -64,9 +72,8 @@ triple_list[:]= testSet
 train_dataloader = DataLoader(siamese_dataset,
                         shuffle=True,
                         num_workers=8,
-                        batch_size=train_batch_size)
-test_dataset = get_siam_set(triple_list)
-test_dataloader = DataLoader(test_dataset, num_workers=6, batch_size=1, shuffle=False)
+                        batch_size=100)
+
 
 
 
@@ -74,13 +81,13 @@ def run():
     counter = []
     loss_history = []
     iteration_number = 0
-    for epoch in range(currentEpoch, currentEpoch + NUMBER_OF_EPOCH):
+    for epoch in range(currentEpoch, currentEpoch + train_number_epochs):
         for i, data in enumerate(train_dataloader, 0):
             loss = net.trainBatch(data, optimizer, criterion)
             if i % 10 == 0:
                 log.writeTB('loss', loss, iteration_number)
                 if (validate):
-                    accu = get_accuracy(net , test_dataloader, 1.5, epoch)
+                    accu = get_accuracy(net , 1.5, epoch)
                     log.writeTB('testAccuracy', accu, iteration_number)
                     print("Epoch number {}\n Current loss {}\n accuracy  {}\n ".format(epoch, loss, accu))
                 else:
@@ -91,3 +98,5 @@ def run():
     save_checkpoint(net, epoch, optimizer)
     log.close()
     show_plot(counter, loss_history)
+
+run()
