@@ -29,22 +29,27 @@ import torchvision.utils as vutils
 import torch.nn.functional as F
 import os
 
+from utils.Visualize import plot_data
 
 
-
-
-
-def get_accuracy(net , test_dataloader, threshHold):
+def get_accuracy(net , test_dataloader, threshHold, epoch):
     dataiter = iter(test_dataloader)
+    all = []
+    all_labels = []
     correct = 0
     incorrect = 0
     for i in range(100):
         data = next(dataiter)
         label, prediction = net.Eval(net,data)
+        all.extend(prediction.tolist())
+        all_labels.extend(label.data.cpu().numpy().tolist())
         if (label > 0.5).numpy() & (prediction < threshHold):
             correct = correct+1
         elif (label < 0.5).numpy() & (prediction > threshHold):
             correct = correct + 1
         else:
             incorrect = incorrect + 1
+    numpy_all = np.array(all)
+    numpy_labels = np.array(all_labels)
+    plot_data(numpy_all, numpy_labels,epoch)
     return correct/(correct+incorrect)

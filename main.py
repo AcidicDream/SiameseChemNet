@@ -80,7 +80,7 @@ def run():
             if i % 10 == 0:
                 log.writeTB('loss', loss, iteration_number)
                 if (validate):
-                    accu = get_accuracy(net , test_dataloader, 1.5)
+                    accu = get_accuracy(net , test_dataloader, 1.5, epoch)
                     log.writeTB('testAccuracy', accu, iteration_number)
                     print("Epoch number {}\n Current loss {}\n accuracy  {}\n ".format(epoch, loss, accu))
                 else:
